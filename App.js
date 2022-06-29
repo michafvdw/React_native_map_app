@@ -1,44 +1,40 @@
-import * as React from 'react';
-import { Button, View, Text, Image } from 'react-native';
+import React, {useState, useEffect} from 'react';
+
+//import { Button, View, Text, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import  Map  from "./components/mapView"; // Import a component from another file
+import  HomeScreen  from "./components/homeScreen"; // Import a component from another file
+import  ReviewsScreen  from "./components/reviewsScreen"; // Import a component from another file
+import { EventRegister } from 'react-native-event-listeners'; //https://www.youtube.com/watch?v=EfIHqvJraRQ
+import themeContext from './components/themeContext'
+import theme from './components/theme'
 
-function HomeScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen</Text>
-      <Button
-        title="Go to Reviews"
-        onPress={() => navigation.navigate('Reviews')}
-      />
-    </View>
-  );
-}
 
-function ReviewsScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Reviews Screen</Text>
-      <Button
-        title="Go to Reviews... again"
-        onPress={() => navigation.push('Reviews')}
-      />
-      <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
-      <Button title="Go back" onPress={() => navigation.goBack()} />
-      <Button
-        title="Go back to first screen in stack"
-        onPress={() => navigation.popToTop()}
-      />
-    </View>
-  );
-}
 
 const Stack = createNativeStackNavigator();
 
 function App() {
+
+  const [mode, setMode] = useState(false);
+
+  useEffect(() => {
+    let eventListener = EventRegister.addEventListener(
+      "changeTheme",
+      (data) => {
+        setMode(data);
+        console.log(data);
+      }
+    );
+    /*
+    return () => {
+      EventRegister.removeEventlistener(eventListener);
+    };*/
+  });
+
   return (
     
+
+    <themeContext.Provider value ={mode === true ? theme.dark : theme.light}>
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
          
@@ -52,6 +48,7 @@ function App() {
             },
             headerTintColor: '#fff',
           }}
+          
         />
         <Stack.Screen
           name="Reviews"
@@ -66,11 +63,10 @@ function App() {
         />
       </Stack.Navigator>
 
-      <Map>
-
-      </Map>
 
     </NavigationContainer>
+    </themeContext.Provider>
+
 
     
   );
