@@ -1,37 +1,79 @@
-import * as React from "react";
-
-// Importing components from react-native library.
-import { View, Text } from "react-native";
+import * as React from 'react';
+import { Button, View, Text, Image } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import  Map  from "./components/mapView"; // Import a component from another file
 
-
-function App() {
-return (
-	// Using react-natives built in components.
-	<View>
-  
-      
-      <Text  
-        style={{
-        color: "black",
-        textAlign: 'center',
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'relative',
-
-        fontSize: 50,
-        width: 100,
-        height: 100,
-        }}>
-        mislukte header
-      </Text>
-  <Map>
-
-  </Map>
-
-	</View>
-);
+function HomeScreen({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Home Screen</Text>
+      <Button
+        title="Go to Reviews"
+        onPress={() => navigation.navigate('Reviews')}
+      />
+    </View>
+  );
 }
 
+function ReviewsScreen({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Reviews Screen</Text>
+      <Button
+        title="Go to Reviews... again"
+        onPress={() => navigation.push('Reviews')}
+      />
+      <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
+      <Button title="Go back" onPress={() => navigation.goBack()} />
+      <Button
+        title="Go back to first screen in stack"
+        onPress={() => navigation.popToTop()}
+      />
+    </View>
+  );
+}
 
- export default App; 
+const Stack = createNativeStackNavigator();
+
+function App() {
+  return (
+    
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+         
+      <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            title: 'My home',
+            headerStyle: {
+              backgroundColor: '#f4511e',
+            },
+            headerTintColor: '#fff',
+          }}
+        />
+        <Stack.Screen
+          name="Reviews"
+          component={ReviewsScreen}
+          options={{
+            title: 'My Reviews ',
+            headerStyle: {
+              backgroundColor: '#f4511e',
+            },
+            headerTintColor: '#fff',
+          }}
+        />
+      </Stack.Navigator>
+
+      <Map>
+
+      </Map>
+
+    </NavigationContainer>
+
+    
+  );
+}
+
+export default App;
